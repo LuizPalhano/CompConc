@@ -1,0 +1,8 @@
+Questão 1
+Ocasionalmente há mudanças na ordem em que as threads são impressas, dado que o escalonamento de qual thread vai ser executada quando nesse caso depende apenas do sistema operacional. Dessa forma, pode ser que em determinado momento uma thread seja processada primeiro, enquanto em outro momento a outra é processada primeiro.
+
+Questão 2
+
+
+Questão 4
+

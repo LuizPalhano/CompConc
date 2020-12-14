@@ -4,9 +4,6 @@ DRE: 118061663
 CompConc 2020.1
 */
 
-//TODO
-//falta medir os tempos
-
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>

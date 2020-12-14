@@ -3,7 +3,7 @@ Nome: Luiz Henrique Gopfert Palhano Leal
 DRE: 118061663
 CompConc 2020.1
 */
-
+ 
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -107,14 +107,20 @@ int main (int argc, char* argv[]) {
 	matrixSide = atoi(argv[1]);
 	nthreads = atoi(argv[2]);
 	
-	//aloca memória para as três matrizes a serem usadas
+	//aloca memória para as três matrizes a serem usadas e para o array de IDs internos
 	matrixA = malloc(sizeof(float) * matrixSide * matrixSide);
 	matrixB = malloc(sizeof(float) * matrixSide * matrixSide);
 	matrixC = malloc(sizeof(float) * matrixSide * matrixSide);
+	internalID = malloc(sizeof(pthread_t) * nthreads);
 	
 	//evita falha por falta de memória ou falta de permissão de alocação de memória
 	if(matrixA == NULL || matrixB == NULL || matrixC == NULL) {
 		printf("Falha na alocação de memória! (Matrizes)\n");
+		return 2;
+	}
+	
+	if (internalID == NULL) {
+		printf("Falha na alocação de memória! (ID Interno)\n");
 		return 2;
 	}
 	
@@ -134,54 +140,50 @@ int main (int argc, char* argv[]) {
 	if (nthreads != 1) {
 		for(i = 0; i<nthreads-1; i++) {
 			parameters = malloc(sizeof(threadAtt));
-			internalID = malloc(sizeof(pthread_t));
 			if (parameters == NULL) {
 				printf("Falha na alocação de memória! (Parâmetros)\n");
-				return 2;
-			}
-			if (internalID == NULL) {
-				printf("Falha na alocação de memória! (ID Interno)\n");
 				return 2;
 			}
 			parameters->size = matrixSide;
 			parameters->startID = aux;
 			parameters->endID = aux + threadLoad;
-			pthread_create(&internalID, NULL, multMat, (void*) parameters);
+			pthread_create(&internalID[i], NULL, multMat, (void*) parameters);
 			aux += threadLoad;
 		}
 	}
 	//a última thread é criada separadamente para poder ir até o final da matriz (a última thread recebe uma load maior)
 	//se só existir uma thread a ser criada, ela é criada aqui
 	parameters = malloc(sizeof(threadAtt));
-	internalID = malloc(sizeof(pthread_t));
 	if (parameters == NULL) {
 		printf("Falha na alocação de memória! (Parâmetros)\n");
-		return 2;
-	}
-	if (internalID == NULL) {
-		printf("Falha na alocação de memória! (ID Interno)\n");
 		return 2;
 	}
 	parameters->size = matrixSide;
 	parameters->startID = aux;
 	parameters->endID = matrixSide;
-	pthread_create(&internalID, NULL, multMat, (void*) parameters);
+	pthread_create(&internalID[i], NULL, multMat, (void*) parameters);
 	
 	//testa a função de exibir as matrizes
 	//showMatrix(matrixSide);
 	
 	//testa as contas de multiplicação de matrizes
 	//multiplica(matrixSide);
+
+	for(i = 0; i<nthreads; i++) {
+		if(pthread_join(internalID[i], NULL)) {
+			printf("Falha na união das threads!\n");
+			return 3;
+		}
+	}
 	
-	//libera as matrizes
+	printf("Tempo gasto: %.0fms\n", timeSpent*1000);
+	
+	//libera a memória
 	free(matrixA);
 	free(matrixB);
 	free(matrixC);
-
-	printf("Tempo gasto: %f\n", timeSpent*1000);
-	//não sei por quantas threads eu vou ter que esperar, então uso o exit em vez do join
-	
-	pthread_exit(NULL);
+	free(internalID);
+	free(parameters);
 	
 	return 0;
 }

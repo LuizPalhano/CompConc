@@ -1,0 +1,20 @@
+--500 linhas
+-1 thread: 670 ms
+-2 threads: 413 ms
+-4 threads: 353 ms
+-Aceleração (2 threads): 1.62
+-Aceleração (4 threads): 1.89
+
+--1000 linhas
+-1 thread: 6690 ms
+-2 threads: 3621 ms
+-4 threads: 3377 ms
+-Aceleração (2 threads): 1.84
+-Aceleração (4 threads): 1.98
+
+--2000 linhas
+-1 thread: 65264 ms
+-2 threads: 41358 ms
+-4 threads: 37124 ms
+-Aceleração (2 threads): 1.57
+-Aceleração (4 threads): 1.75

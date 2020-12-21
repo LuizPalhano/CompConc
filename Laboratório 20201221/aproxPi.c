@@ -4,8 +4,6 @@ DRE: 118061663
 CompConc 2020.1
 */
 
-//todo
-//computar a soma a partir do vetor de resultados (no pthread_join())
 //PROBLEMA: SEQUENCIAL NÃO PROCESSA COM SIZE=10^9 (congela o computador)
 
 #include <stdio.h>

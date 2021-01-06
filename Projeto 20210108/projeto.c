@@ -21,10 +21,6 @@ typedef struct {
 	int isFound;
 } Profile;
 
-//global, pois é acessado por todas as threads
-Profile profiles[NPROFILES];
-int * threadResults;
-
 //struct de atributos passados para cada thread
 typedef struct {
 	int startIndex;
@@ -33,6 +29,10 @@ typedef struct {
 	int begin;
 	int end;
 } threadAtt;
+
+//global, pois é acessado por todas as threads
+Profile * profiles;
+int * threadResults;
 
 //tarefa executada pelas threads
 void * task (void * arg) {
@@ -95,6 +95,10 @@ int main (int argc, char *argv[]) {
 	
 	//início do programa
 	//inicializa o vetor de perfis
+	profiles = malloc(sizeof(Profile) * NPROFILES);
+	if(profiles == NULL) {
+		printf("Falha na alocação de memória! (Vetor de perfis)\n");
+	}
 	for(i = 0; i<NPROFILES; i++) {
 		profiles[i].birthDate = BASEDATE + (i % 30); //mantém todas as datas dentro de janeiro de 2000
 		strcpy(profiles[i].name, "Joao da Silva"); 	 //o nome é irrelevante,
@@ -115,6 +119,11 @@ int main (int argc, char *argv[]) {
 	nthreads = atoi(argv[1]);
 	startDate = atoi(argv[2]);
 	endDate = atoi(argv[3]);
+	if (startDate > endDate) {
+		aux = endDate;
+		endDate = startDate;
+		startDate = aux;
+	}
 	if (nthreads > NPROFILES) {
 		nthreads = NPROFILES;
 	}
@@ -175,7 +184,7 @@ int main (int argc, char *argv[]) {
 	//libera as memórias alocadas
 	free(threadIDs);
 	free(threadResults);
-	free(att);
+	free(profiles);
 	
 	//termina de marcar o tempo
 	clock_gettime(CLOCK_MONOTONIC, &finish);

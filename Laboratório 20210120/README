@@ -1,0 +1,3 @@
+readWrite.c é a base do problema; os escritores podem sofrer de inanição.
+readWriteWriters.c é o problema, dando prioridade aos escritores. Os leitores podem sofrer de inanição.
+readWriteEqual.c é o problema, com ambas as classes tendo prioridades iguais. O programa pode sofrer perda de performance.

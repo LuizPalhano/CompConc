@@ -63,7 +63,7 @@ class AddingArray {
 public class ProjectMain {
     private static final int NTHREADS = 4;
 
-    public void main(String[] args) {
+    public static void main(String[] args) {
         //cria os vetores nas classes apropriadas
         Thread[] threads;
         AddingArray a = new AddingArray();

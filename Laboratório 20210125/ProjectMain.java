@@ -4,9 +4,9 @@ DRE: 118061663
 CompConc 2020.1
 */
 
-//task a ser executada pelas threads
+//tarefa a ser executada pelas threads
 class Task extends Thread {
-    private int startIndex, endIndex;
+    private int startIndex, endIndex, currentTotal;
     private AddingArray a, b, target;
 
     public Task (int startIndex, int endIndex, AddingArray a, AddingArray b, AddingArray target) {
@@ -18,7 +18,6 @@ class Task extends Thread {
     }
 
     public void run() {
-        int currentTotal;
         for (int i  = startIndex; i < endIndex; i++) {
             currentTotal = a.getElement(i) + b.getElement(i);
             target.insertElement(i, currentTotal);
@@ -64,7 +63,7 @@ class AddingArray {
 public class ProjectMain {
     private static final int NTHREADS = 4;
 
-    public static void main() {
+    public void main(String[] args) {
         //cria os vetores nas classes apropriadas
         Thread[] threads;
         AddingArray a = new AddingArray();
@@ -108,6 +107,6 @@ public class ProjectMain {
             }
         }
 
-        System.out.println("Fim da execução");
+        System.out.println("Fim da execução.");
     }
 }
